@@ -50,10 +50,12 @@ def main():
 
 #funciton to handle the encryption 
 def encryption(plain_text,shift1,shift2):
+    #setting the empty string to append 
+    cipher_text=""
     #looping through each character
     for ch in plain_text:
-        #setting th empty string to append 
-        cipher_text=""
+        
+        
         #checking if the character is lower or not
         if ch.islower():
             """ checking the conditions accrording to the questions 
