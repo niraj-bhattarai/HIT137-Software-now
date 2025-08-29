@@ -6,7 +6,7 @@ import os
 
 """ Note :The inital idea of this code was inspired by 
 
-# ChatGPT (OpenAI) suggested using modulo % 26 for Caesar cipher wrap-around. 
+# ChatGPT (OpenAI) suggested using modulo % 13 for Caesar cipher wrap-around. 
     .accessed on Aug 27 2025
 # This avoids manual if-checks and works for large shifts
 chr(((ord(ch) - ord('a') + shift) % 13) + ord('a')) this"""
@@ -15,11 +15,15 @@ chr(((ord(ch) - ord('a') + shift) % 13) + ord('a')) this"""
 
 #i have used mode 13 because it helps to keep the characters witin in range as there are differenent cases for encryption for different range of alphabets
 
+"""try ane except has been implemented through out the code 
+Exception is being used rather than specific error because it accomodates a lot of errors at once ranther than addressing
+individual kind of error in order to reduce the code complication """
 
 
 #defining the main function 
 def main():
 
+   
 
     #the number of shift asked to the user 
     try:
@@ -30,51 +34,70 @@ def main():
         print("The shift value must be in integer ie 1,2,3")
 
 
-
-
-    #calling the encryption function
-    encryption(shift1,shift2)
-    #callinf the decryption function
-    decryption(shift1,shift2)
-    #calling the varification funciton
-    verfication()
-
-    
-
-
-
-    
-   
-
-   
-
-
-   
-
-
-def verfication():
     #getting the current working directory
-    path=os.getcwd()
+    #initilizing the path value as it is required so i updated this to reduce the redundency
+    path=""
+    try:
+        path=os.getcwd()
+    except Exception as e:
+        #printing this error makes it easier to see the problem
+        print("Error getting the path ",e)
 
-    #opened mutiple file at once
-    with open(path + "\\decrypted_text.txt", "r") as decrypted_txt, \
+
+
+    try:
+        #calling the encryption function
+        encryption(path,shift1,shift2)
+        #callinf the decryption function
+        decryption(path,shift1,shift2)
+        #calling the varification funciton
+        verfication(path)
+    except Exception as e:
+        print("Error completing the steps",e)
+
+    
+
+    
+
+
+
+    
+   
+
+   
+
+
+   
+
+
+def verfication(path):
+   
+    
+    #opened mutiple file at once the \ separetes the line 
+    try:
+        with open(path + "\\decrypted_text.txt", "r") as decrypted_txt, \
          open(path + "\\raw_text.txt", "r") as raw_txt:
-        
-        if decrypted_txt.read() == raw_txt.read():
-            print("The decryption was successful")
-        else:
-            print("Decryption failed")
+            #comparing the two files according to the quesetion
+            if decrypted_txt.read() == raw_txt.read():
+                print("The decryption was successful")
+            else:
+                print("Decryption failed")
+    except Exception as e:
+        print("Error occured while accessing the file during verification ",e)
+
         
 
 #function to decrypt the text
-def decryption(shift1,shift2):
-    #getting the path for current working directory
-    path=os.getcwd()
-
+def decryption(path,shift1,shift2):
     #opening the encrypted_txt.txt from the directory
-    with open(path+"\\encrypted_text.txt","r") as encrypted_text:
-        input_encrypted_text=encrypted_text.read()
-        encrypted_text.close()
+    try:
+        with open(path+"\\encrypted_text.txt","r") as encrypted_text:
+            input_encrypted_text=encrypted_text.read()
+            encrypted_text.close()
+    
+
+    except Exception as e:
+        print("Error occured opening encrypted_text",e)
     
 
     #inilized the decrypted_text
@@ -87,23 +110,27 @@ def decryption(shift1,shift2):
           if ch.islower():
               #condtion for the range a to m  mode 13 because it range 13 characters
               if 'a' <= ch <= 'm':
-               
+
+               #condition according to question and mode 13 to wrap around the  13-letters
                 shift = (shift1 * shift2) % 13
+
+                # Decodes a single character by shifting its ASCII code backwards within the range 'a'–'m',
+                # wrapping around using modulo arithmetic to ensure the result stays in this 13-letter block.
                 decrypted_text += chr(((ord(ch) - ord('a') - shift) % 13) + ord('a'))
             
               else:
+                #condition according to question and mode 13 to wrap around the  13 alphabets
                 shift = (shift1 + shift2) % 13
-            
                 decrypted_text += chr(((ord(ch) - ord('n') + shift) % 13) + ord('n'))
 
           elif ch.isupper():
               #condtion for the A to M  
               if 'A' <= ch <= 'M':
-            
+                #condition according to question and mode 13 to wrap around the  13 alphabets
                 shift = (shift1 % 13)
                 decrypted_text += chr(((ord(ch) - ord('A') + shift) % 13) + ord('A'))
               else:
-                #accorf
+                #condition according to question and mode 13 to wrap around the  13 alphabets
                 shift = (shift2**2) % 13
                 decrypted_text += chr(((ord(ch) - ord('N') - shift) % 13) + ord('N'))
 
@@ -113,29 +140,30 @@ def decryption(shift1,shift2):
     
 
 
-    #opening and writing the decrypted content to the result
-    with open("decrypted_txt.txt","w") as decryption_result:
-        decryption_result.write(decrypted_text)
+    #opening and writing the decrypted content to the 
+    try:
+        with open("decrypted_text.txt","w") as decryption_result:
+            decryption_result.write(decrypted_text)
+            decryption_result.close()
+    except Exception as e:
+        print("Error occured in writing decrypted.txt",e)
 
 
 
 
 #funciton to handle the encryption 
-def encryption(shift1,shift2):
-    #getting the current working directory using the OS (built-in library)
-    path=os.getcwd()
-
-
-    #need to remove just for testing
-    print(path)
-
+def encryption(path,shift1,shift2):
     #opening the file from the current directory
     #need to handle excepption gracefully :what if there is no file named raw.txt
-    with open(path+"\\raw_text.txt","r") as plain_text:
-        #reading the text from the file
-        input_plain_text=plain_text.read()
-        #closing the file
-        plain_text.close()
+    try:
+        with open(path+"\\raw_text.txt","r") as plain_text:
+            #reading the text from the file
+            input_plain_text=plain_text.read()
+            #closing the file
+            plain_text.close()
+    except Exception as e :
+        print("Error occured in opening the raw text in encryption",e)
+
 
     #setting the empty string to append 
     cipher_text=""
@@ -160,11 +188,11 @@ def encryption(shift1,shift2):
         #condition for the upper case
         elif ch.isupper():
             if 'A' <=ch <= 'M':
-                # FIX: keep inside A..M (13 letters). Use base 'A' and %13.
+                #making base 13
                 shift = ((-shift1) % 13)
                 cipher_text += chr(((ord(ch) - ord('A') + shift) % 13) + ord('A'))
             else:
-                # FIX: keep inside N..Z (13 letters). Use base 'N' and %13.
+                #making base 13
                 shift = ((shift2**2) % 13)
                 cipher_text += chr(((ord(ch) - ord('N') + shift) % 13) + ord('N'))
         else:
@@ -172,9 +200,12 @@ def encryption(shift1,shift2):
 
 
     #creating and opening the encrypted_txt.txt for encrypted text
-    with open("encrypted_txt.txt","w") as encrypted:
-        encrypted.write(cipher_text)
-        encrypted.close() 
+    try:
+        with open("encrypted_text.txt","w") as encrypted:
+            encrypted.write(cipher_text)
+            encrypted.close() 
+    except Exception as e:
+        print("Error occured in writing the encrypted_text",e)
 
     
 
