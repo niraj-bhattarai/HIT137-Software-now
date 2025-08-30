@@ -22,10 +22,7 @@ individual kind of error in order to reduce the code complication """
 
 #defining the main function 
 def main():
-
-   
-
-    #the number of shift asked to the user 
+  #the number of shift asked to the user 
     try:
         shift1=int(input("Enter the first shift number : "))
         shift2=int(input("Enter the second shift number : "))
@@ -56,15 +53,7 @@ def main():
         print("Error completing the steps",e)
 
     
-
     
-
-
-
-    
-   
-
-   
 
 
    
@@ -86,7 +75,6 @@ def verfication(path):
         print("Error occured while accessing the file during verification ",e)
 
         
-
 #function to decrypt the text
 def decryption(path,shift1,shift2):
     #opening the encrypted_txt.txt from the directory
