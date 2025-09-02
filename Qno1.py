@@ -1,6 +1,5 @@
 "Encryption and decryption"
 
-
 #importing os :to work with the current directory
 import os
 
