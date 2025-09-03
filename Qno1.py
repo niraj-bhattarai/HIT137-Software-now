@@ -19,6 +19,9 @@ Exception is being used rather than specific error because it accomodates a lot 
 individual kind of error in order to reduce the code complication """
 
 
+
+#testing done !
+
 #defining the main function 
 def main():
   #the number of shift asked to the user 
