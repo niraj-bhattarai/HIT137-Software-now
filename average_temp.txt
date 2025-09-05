@@ -1,0 +1,4 @@
+﻿Summer(Dec-Feb): 32.1°C
+Autumn(Mar-May): 27.3°C
+Winter(Jun-Aug): 21.1°C
+Spring(Sep-Nov): 27.4°C
