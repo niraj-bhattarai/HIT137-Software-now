@@ -5,13 +5,14 @@ import numpy as np
 import pandas as pd
 
 #Paths
-DATA_FOLDER = r"C:\Users\asus\Desktop\Assignment2\temperatures"
+DATA_FOLDER = r"C:\Users\niraj\OneDrive\Desktop\Assignment2\Assignment2\temperatures"
+
 
 AVG_FILE = "average_temp.txt"
 RANGE_FILE = "largest_temp_range_station.txt"
 STABILITY_FILE = "temperature_stability_stations.txt"
 
-#Defining seasons by its months.
+#This is the season 
 SEASONS = {
     "Summer(Dec-Feb)": [12, 1, 2],
     "Autumn(Mar-May)": [3, 4, 5],
@@ -20,13 +21,13 @@ SEASONS = {
 }
 SEASON_ORDER = ["Summer(Dec-Feb)", "Autumn(Mar-May)", "Winter(Jun-Aug)", "Spring(Sep-Nov)"]
 
-#Mapping month names to numbers.
+#This is the month name to number form 
 MONTH_MAP = {
     "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
     "july": 7, "august": 8, "september": 9, "october": 10, "november": 11, "december": 12
 }
 
-#list of column name in order.
+#list of column name
 MONTH_COLS = list(MONTH_MAP.keys())      
 
 #Make all column names lowercase and remove extra spaces.
@@ -37,7 +38,7 @@ def _clean_headers(cols):
 def _to_number(s):
     return pd.to_numeric(s, errors="coerce")
 
- #Extracting a 4-digit year from the filename
+ #Get a 4 digit year from the filename
 def _year_from_filename(path):
     m = re.search(r"(\d{4})", os.path.basename(path))
     if not m:
@@ -66,11 +67,11 @@ def _wide_months_to_long(df, file_path):
     if not st_col:
         return pd.DataFrame(columns=["date", "station", "temperature"])
 
-    cols = [st_col] + MONTH_COLS       #Using only station and month columns
-    melted = df[cols].melt(id_vars=[st_col], value_vars=MONTH_COLS,       #Keeping station fixed and months to unpivot respectively.
-                           var_name="month_name", value_name="temperature")   #New column containing month names, new column containing temperatures only.
+    cols = [st_col] + MONTH_COLS
+    melted = df[cols].melt(id_vars=[st_col], value_vars=MONTH_COLS,
+                           var_name="month_name", value_name="temperature")
 
-    melted["station"] = melted[st_col].astype(str).str.strip()      #Standardizing station and temperature.
+    melted["station"] = melted[st_col].astype(str).str.strip()
     melted["temperature"] = _to_number(melted["temperature"])
     melted["month"] = melted["month_name"].map(MONTH_MAP).astype("Int64")
 
@@ -81,7 +82,7 @@ def _wide_months_to_long(df, file_path):
         errors="coerce"
     )
 
-#Return only the columns, dropping missing station/temperature.
+#Return only the columns we need drop missing station/temp
     out = melted[["date", "station", "temperature"]]
     out = out.dropna(subset=["station", "temperature"])
     return out
@@ -222,4 +223,64 @@ def write_largest_range(df, out_path):
     with open(out_path, "w", encoding="utf-8-sig") as f:
         for st, row in top.iterrows():
             f.write(f"{st}: Range {row['range']:.1f}°C (Max: {row['max']:.1f}°C, Min: {row['min']:.1f}°C)\n")
+#Analysis 3: we are analysing the temperature stability (STD)
 
+# we are finding the most stable smallest and most variable largest std dev station
+
+def write_stability(df, out_path):
+    """most stable (smallest std dev) and most variable (largest std dev) station(s)"""
+    work = df.dropna(subset=["station", "temperature"]).copy()
+    if work.empty:
+        with open(out_path, "w", encoding="utf-8-sig") as f:
+            f.write("No valid temperature data found.\n")
+        return
+    
+#we are finding the standard deviation per station we need at least 2 readings per station
+    stddevs = work.groupby("station")["temperature"].std(ddof=1).dropna()
+    if stddevs.empty:
+        with open(out_path, "w", encoding="utf-8-sig") as f:
+            f.write("Not enough data to compute stability (need ≥2 readings per station).\n")
+        return
+    
+#we are findin the smallest and largest std dev values
+    min_std = stddevs.min()
+    max_std = stddevs.max()
+
+#we are getting all stations that match those values
+    most_stable = sorted(stddevs[stddevs == min_std].index.tolist())
+    most_variable = sorted(stddevs[stddevs == max_std].index.tolist())
+
+#we are writing the results in the requested format
+    with open(out_path, "w", encoding="utf-8-sig") as f:
+        for st in most_stable:
+            f.write(f"Most Stable: {st}: StdDev {min_std:.1f}°C\n")
+        for st in most_variable:
+            f.write(f"Most Variable: {st}: StdDev {max_std:.1f}°C\n")
+
+#we are running all the things here 
+def main():
+    print("Loading data...")
+    df = load_all_data(DATA_FOLDER)
+    if df.empty:
+        print("No valid data found. Check your CSVs and column names.")
+        return
+
+    print(f"Rows loaded: {len(df)}")
+
+    print("Computing seasonal averages...")
+    write_seasonal_average(df, AVG_FILE)
+    print(f"Wrote {AVG_FILE}")
+
+    print("Computing largest temperature range per station...")
+    write_largest_range(df, RANGE_FILE)
+    print(f"Wrote {RANGE_FILE}")
+
+    print("Computing temperature stability...")
+    write_stability(df, STABILITY_FILE)
+    print(f"Wrote {STABILITY_FILE}")
+
+    print("Done.")
+
+#only run main file when this is executed 
+if __name__ == "__main__":
+    main()
