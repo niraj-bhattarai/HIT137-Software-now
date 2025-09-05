@@ -82,8 +82,9 @@ def main():
     except ValueError:             
         print("ERROR!!! Please enter valid input")
 
-if __name__ == "__main":
+if __name__ == "__main__":
     main()
+
 
 
 
