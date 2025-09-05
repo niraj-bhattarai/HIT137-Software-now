@@ -38,6 +38,7 @@ def polygon(sides,length,depth):     #Function to draw a regular polygon
 
 
 #Main function
+    
 def main():
  
     try:    #try_Except to validate the user inputs.
@@ -56,7 +57,9 @@ def main():
         if depth<0:
          print("Depth should be positive")
          return
-
+                
+            
+            
         turtle.speed(0)                 # Setting up the maximum speed of the turtle
         turtle.shape("turtle")                               #Changing the shape
         turtle.title("Generating Geometric Pattern")         #Title of the graphics
@@ -71,28 +74,12 @@ def main():
         #turtle.fillcolor("blue")      
 
         polygon(sides,length,depth)     #Calls the polygon function.
-         #turtle.end_fill()              (Fills the color and ends)
+        #turtle.end_fill()              (Fills the color and ends)
                     
         turtle.done()                   #Finish the turtle program.
-    
-    
+
+
     except ValueError:             
         print("ERROR!!! Please enter valid input")
 
-if __name__ == "__main__":       #Calling main function
-   main()
-
-
-   
-
-                
-
-                
-            
-            
-
-
-
-
-
-
+main()
