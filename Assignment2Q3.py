@@ -38,35 +38,60 @@ def polygon(sides,length,depth):     #Function to draw a regular polygon
 
 
 #Main function
-sides=int(input("Enter the number of sides of a regular polygon:: "))  #Asking user to input the sides of a regular polygon.
-       
+def main():
+ 
+    try:    #try_Except to validate the user inputs.
+        sides=int(input("Enter the number of sides of a regular polygon:: "))  #Asking user to input the sides of a regular polygon.
+        if sides<3:
+         print("Sides should not be less than 3")
+         return
         
 
-length=int(input("Enter the length of a regular polygon(in pixels):: "))  #Asking user to input the length of a regular polygon(in pixels)
-        
+        length=int(input("Enter the length of a regular polygon(in pixels):: "))  #Asking user to input the length of a regular polygon(in pixels)
+        if length <=0:
+         print("Length should be positive")
+         return
                 
-depth=int(input("Enter the recursion depth to apply:: "))  #Asking user to input recursion depth i.e how many time we need to do recursion.
+        depth=int(input("Enter the recursion depth to apply:: "))  #Asking user to input recursion depth i.e how many time we need to do recursion.
+        if depth<0:
+         print("Depth should be positive")
+         return
 
-                
-            
-            
-turtle.speed(0)                 # Setting up the maximum speed of the turtle
-turtle.shape("turtle")                               #Changing the shape
-turtle.title("Generating Geometric Pattern")         #Title of the graphics
+         turtle.speed(0)                 # Setting up the maximum speed of the turtle
+         turtle.shape("turtle")                               #Changing the shape
+         turtle.title("Generating Geometric Pattern")         #Title of the graphics
 
          #Changing position of the turtle to start drawing.
 
-turtle.penup()                  #Lifts the pen i.e moves turtle without drawing.
-turtle.goto(-200,200)           #Starts from slightly left and up. 
-turtle.pendown()                #Put the pen down to draw the line from new position.
+         turtle.penup()                  #Lifts the pen i.e moves turtle without drawing.
+         turtle.goto(-200,200)           #Starts from slightly left and up. 
+         turtle.pendown()                #Put the pen down to draw the line from new position.
 
         #turtle.begin_fill()           (We can fill any color in the geometric pattern using this)
         #turtle.fillcolor("blue")      
 
-polygon(sides,length,depth)     #Calls the polygon function.
-        #turtle.end_fill()              (Fills the color and ends)
+         polygon(sides,length,depth)     #Calls the polygon function.
+         #turtle.end_fill()              (Fills the color and ends)
                     
-turtle.done()                   #Finish the turtle program.
+         turtle.done()                   #Finish the turtle program.
+    
+    
+    except ValueError:             
+        print("ERROR!!! Please enter valid input")
+
+if __name__ == "__main__":       #Calling main function
+   main()
+
+
+   
+
+                
+
+                
+            
+            
+
+
 
 
 
