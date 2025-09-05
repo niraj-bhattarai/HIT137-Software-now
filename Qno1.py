@@ -24,7 +24,7 @@ individual kind of error in order to reduce the code complication """
 
 #defining the main function 
 def main():
-  #the number of shift asked to the user 
+  #the number of shifts asked to the user 
     try:
         shift1=int(input("Enter the first shift number : "))
         shift2=int(input("Enter the second shift number : "))
@@ -33,7 +33,7 @@ def main():
         print("The shift value must be in integer ie 1,2,3")
 
 
-    #getting the current working directory
+    #getting into the current working directory
     #initilizing the path value as it is required so i updated this to reduce the redundency
     path=""
     try:
@@ -47,9 +47,9 @@ def main():
     try:
         #calling the encryption function
         encryption(path,shift1,shift2)
-        #callinf the decryption function
+        #calling the decryption function
         decryption(path,shift1,shift2)
-        #calling the varification funciton
+        #calling the verification function
         verfication(path)
     except Exception as e:
         print("Error completing the steps",e)
@@ -61,14 +61,14 @@ def main():
    
 
 
-def verfication(path):
+def verfication(path):    #Verification function: checking if decrypted text matches raw txt.
    
     
     #opened mutiple file at once the \ separetes the line 
     try:
         with open(path + "\\decrypted_text.txt", "r") as decrypted_txt, \
          open(path + "\\raw_text.txt", "r") as raw_txt:
-            #comparing the two files according to the quesetion
+            #comparing the two files according to the question
             if decrypted_txt.read() == raw_txt.read():
                 print("The decryption was successful")
             else:
@@ -77,7 +77,7 @@ def verfication(path):
         print("Error occured while accessing the file during verification ",e)
 
         
-#function to decrypt the text
+#function to decrypt the encrypted text
 def decryption(path,shift1,shift2):
     #opening the encrypted_txt.txt from the directory
     try:
@@ -90,15 +90,14 @@ def decryption(path,shift1,shift2):
         print("Error occured opening encrypted_text",e)
     
 
-    #inilized the decrypted_text
+    #initialized the decrypted_text
     decrypted_text=""
 
-
-    #loop thorugh every chracter
+        #Processing each character
     for ch in input_encrypted_text:
           #checking condition for the lower case
           if ch.islower():
-              #condtion for the range a to m  mode 13 because it range 13 characters
+              # For a–m: shift backwards by (shift1 * shift2) % 13
               if 'a' <= ch <= 'm':
 
                #condition according to question and mode 13 to wrap around the  13-letters
@@ -109,18 +108,18 @@ def decryption(path,shift1,shift2):
                 decrypted_text += chr(((ord(ch) - ord('a') - shift) % 13) + ord('a'))
             
               else:
-                #condition according to question and mode 13 to wrap around the  13 alphabets
+               # For n–z: shift forward by (shift1 + shift2) % 13
                 shift = (shift1 + shift2) % 13
                 decrypted_text += chr(((ord(ch) - ord('n') + shift) % 13) + ord('n'))
 
           elif ch.isupper():
-              #condtion for the A to M  
+              # condition for the A to M  i.e uppercase letters
               if 'A' <= ch <= 'M':
-                #condition according to question and mode 13 to wrap around the  13 alphabets
+                #For A–M: shift forward by (shift1) % 13
                 shift = (shift1 % 13)
                 decrypted_text += chr(((ord(ch) - ord('A') + shift) % 13) + ord('A'))
               else:
-                #condition according to question and mode 13 to wrap around the  13 alphabets
+                #For N–Z: shift backwards by (shift2^2) % 13
                 shift = (shift2**2) % 13
                 decrypted_text += chr(((ord(ch) - ord('N') - shift) % 13) + ord('N'))
 
@@ -141,10 +140,10 @@ def decryption(path,shift1,shift2):
 
 
 
-#funciton to handle the encryption 
+# function to handle the encryption i.e converting raw to encrypted
 def encryption(path,shift1,shift2):
     #opening the file from the current directory
-    #need to handle excepption gracefully :what if there is no file named raw.txt
+
     try:
         with open(path+"\\raw_text.txt","r") as plain_text:
             #reading the text from the file
@@ -166,10 +165,10 @@ def encryption(path,shift1,shift2):
             """ checking the conditions accrording to the questions 
             range a to m """
             if 'a'<= ch <='m':
-                #making the base upto 13 charcter ie :using mode 13 
+                #For a–m: shift forward by (shift1 * shift2) % 13 
                 shift = (shift1*shift2) % 13
                 cipher_text += chr(((ord(ch) - ord('a') + shift) % 13) + ord('a'))
-            #for the other range  n to z
+            #For n–z: shift backwards by (shift1 + shift2) % 13
             else:
                 #making the base upto 13 charcter ie :using mode 13 
                 shift = ((-(shift1+shift2)) % 13)
@@ -178,11 +177,11 @@ def encryption(path,shift1,shift2):
         #condition for the upper case
         elif ch.isupper():
             if 'A' <=ch <= 'M':
-                #making base 13
+                #For A–M: shift backwards by (shift1) % 13
                 shift = ((-shift1) % 13)
                 cipher_text += chr(((ord(ch) - ord('A') + shift) % 13) + ord('A'))
             else:
-                #making base 13
+                #For N–Z: shift forward by (shift2^2) % 13
                 shift = ((shift2**2) % 13)
                 cipher_text += chr(((ord(ch) - ord('N') + shift) % 13) + ord('N'))
         else:
