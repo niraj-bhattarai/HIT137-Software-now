@@ -57,23 +57,23 @@ def main():
          print("Depth should be positive")
          return
 
-         turtle.speed(0)                 # Setting up the maximum speed of the turtle
-         turtle.shape("turtle")                               #Changing the shape
-         turtle.title("Generating Geometric Pattern")         #Title of the graphics
+        turtle.speed(0)                 # Setting up the maximum speed of the turtle
+        turtle.shape("turtle")                               #Changing the shape
+        turtle.title("Generating Geometric Pattern")         #Title of the graphics
 
          #Changing position of the turtle to start drawing.
 
-         turtle.penup()                  #Lifts the pen i.e moves turtle without drawing.
-         turtle.goto(-200,200)           #Starts from slightly left and up. 
-         turtle.pendown()                #Put the pen down to draw the line from new position.
+        turtle.penup()                  #Lifts the pen i.e moves turtle without drawing.
+        turtle.goto(-200,200)           #Starts from slightly left and up. 
+        turtle.pendown()                #Put the pen down to draw the line from new position.
 
         #turtle.begin_fill()           (We can fill any color in the geometric pattern using this)
         #turtle.fillcolor("blue")      
 
-         polygon(sides,length,depth)     #Calls the polygon function.
+        polygon(sides,length,depth)     #Calls the polygon function.
          #turtle.end_fill()              (Fills the color and ends)
                     
-         turtle.done()                   #Finish the turtle program.
+        turtle.done()                   #Finish the turtle program.
     
     
     except ValueError:             
@@ -90,6 +90,7 @@ if __name__ == "__main__":       #Calling main function
                 
             
             
+
 
 
 
