@@ -2,7 +2,7 @@ import turtle
 
 def line_segment(length,depth):     #Creating a function for the line segment to generate a geometric pattern
     
-    if depth==0:                    #for depth 0 it draws straignt line.
+    if depth==0:                    #for depth 0. it draws a straight line.
         turtle.fd(length)
    
     else:
@@ -66,7 +66,7 @@ def main():
 
          #Changing position of the turtle to start drawing.
 
-        turtle.penup()                  #Lifts the pen i.e moves turtle without drawing.
+        turtle.penup()                  #Lifts the pen, i.e moves the turtle without drawing.
         turtle.goto(-200,200)           #Starts from slightly left and up. 
         turtle.pendown()                #Put the pen down to draw the line from new position.
 
@@ -82,6 +82,9 @@ def main():
     except ValueError:             
         print("ERROR!!! Please enter valid input")
 
-main()
+if __name__ == "__main__":
+    main()
+
+
 
 
