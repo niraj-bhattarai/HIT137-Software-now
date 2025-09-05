@@ -11,7 +11,7 @@ AVG_FILE = "average_temp.txt"
 RANGE_FILE = "largest_temp_range_station.txt"
 STABILITY_FILE = "temperature_stability_stations.txt"
 
-#This is the season 
+#Defining seasons by its months.
 SEASONS = {
     "Summer(Dec-Feb)": [12, 1, 2],
     "Autumn(Mar-May)": [3, 4, 5],
@@ -20,13 +20,13 @@ SEASONS = {
 }
 SEASON_ORDER = ["Summer(Dec-Feb)", "Autumn(Mar-May)", "Winter(Jun-Aug)", "Spring(Sep-Nov)"]
 
-#This is the month name to number form 
+#Mapping month names to numbers.
 MONTH_MAP = {
     "january": 1, "february": 2, "march": 3, "april": 4, "may": 5, "june": 6,
     "july": 7, "august": 8, "september": 9, "october": 10, "november": 11, "december": 12
 }
 
-#list of column name
+#list of column name in order.
 MONTH_COLS = list(MONTH_MAP.keys())      
 
 #Make all column names lowercase and remove extra spaces.
@@ -37,7 +37,7 @@ def _clean_headers(cols):
 def _to_number(s):
     return pd.to_numeric(s, errors="coerce")
 
- #Get a 4 digit year from the filename
+ #Extracting a 4-digit year from the filename
 def _year_from_filename(path):
     m = re.search(r"(\d{4})", os.path.basename(path))
     if not m:
@@ -66,11 +66,11 @@ def _wide_months_to_long(df, file_path):
     if not st_col:
         return pd.DataFrame(columns=["date", "station", "temperature"])
 
-    cols = [st_col] + MONTH_COLS
-    melted = df[cols].melt(id_vars=[st_col], value_vars=MONTH_COLS,
-                           var_name="month_name", value_name="temperature")
+    cols = [st_col] + MONTH_COLS       #Using only station and month columns
+    melted = df[cols].melt(id_vars=[st_col], value_vars=MONTH_COLS,       #Keeping station fixed and months to unpivot respectively.
+                           var_name="month_name", value_name="temperature")   #New column containing month names, new column containing temperatures only.
 
-    melted["station"] = melted[st_col].astype(str).str.strip()
+    melted["station"] = melted[st_col].astype(str).str.strip()      #Standardizing station and temperature.
     melted["temperature"] = _to_number(melted["temperature"])
     melted["month"] = melted["month_name"].map(MONTH_MAP).astype("Int64")
 
@@ -81,7 +81,7 @@ def _wide_months_to_long(df, file_path):
         errors="coerce"
     )
 
-#Return only the columns we need drop missing station/temp
+#Return only the columns, dropping missing station/temperature.
     out = melted[["date", "station", "temperature"]]
     out = out.dropna(subset=["station", "temperature"])
     return out
@@ -222,3 +222,4 @@ def write_largest_range(df, out_path):
     with open(out_path, "w", encoding="utf-8-sig") as f:
         for st, row in top.iterrows():
             f.write(f"{st}: Range {row['range']:.1f}°C (Max: {row['max']:.1f}°C, Min: {row['min']:.1f}°C)\n")
+
